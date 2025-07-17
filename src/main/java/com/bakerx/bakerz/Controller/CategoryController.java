@@ -2,6 +2,7 @@ package com.bakerx.bakerz.Controller;
 
 import com.bakerx.bakerz.Service.CategoryService;
 import com.bakerx.bakerz.model.Category;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,16 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> addCategory(@RequestBody Category category) {
-        categoryService.addCategory(category);
-        return new ResponseEntity<>("added", HttpStatus.CREATED);
+    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
+        try {
+            categoryService.addCategory(category);
+            return new ResponseEntity<>("added", HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        } catch (Exception e) {
+            e.printStackTrace(); // ✅ Will help you see the real cause in logs
+            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
