@@ -27,36 +27,27 @@ public class CategoryController {
 
     @PostMapping("/public/categories")
     public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
-        try {
+
             categoryService.addCategory(category);
-            return new ResponseEntity<>("added", HttpStatus.CREATED);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        } catch (Exception e) {
-            e.printStackTrace(); // ✅ Will help you see the real cause in logs
-            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return new ResponseEntity<>("added category", HttpStatus.CREATED);
+
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> DeleteCategory(@PathVariable Long categoryId) {
-        try {
+
             String status = categoryService.deleteCategory(categoryId);
             return ResponseEntity.ok(status);
-        }catch(ResponseStatusException e){
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-        }
+
 
     }
 
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@RequestBody Category category ,@PathVariable Long categoryId) {
-        try {
+    public ResponseEntity<String> updateCategory(@Valid@RequestBody Category category ,@PathVariable Long categoryId) {
+
             Category saved = categoryService.updateCategory(category,categoryId);
             return new ResponseEntity<>("updated " + categoryId, HttpStatus.OK);
-        }catch(ResponseStatusException e){
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-        }
+
     }
 }
 
